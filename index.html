@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MidiAtelier サポート</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.8;
+  }
+  h1 { border-bottom: 3px solid #5AD1E8; padding-bottom: .4rem; }
+  h2 { margin-top: 2.5rem; color: #2E9FB8; }
+  footer { margin-top: 4rem; font-size: .85rem; opacity: .7; }
+  a { color: #2E9FB8; }
+  dt { font-weight: bold; margin-top: 1rem; }
+  code { font-family: Menlo, monospace; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>MidiAtelier サポート</h1>
+<p>MidiAtelier（ミディアトリエ）は、パソコンのキーボードだけで曲を打ち込める macOS 用の MIDI シーケンサーです。ピアノロール・譜面・ドラムのます目の3つの画面で編集でき、標準MIDIファイルの読み書き、音（WAV / M4A）・譜面（PDF）・MusicXML への書き出し、外部 MIDI 音源への出力に対応しています。</p>
+
+<h2>はじめかた</h2>
+<ol>
+  <li>アプリを起動すると、トラック（チャンネル）の一覧が出ます。「Ch 追加」で音を入れる先を作ります。</li>
+  <li>打ち込む画面を開きます。ピアノロールは ⌘2、ドラム入力は ⌘3、譜面は ⌘4 です。</li>
+  <li>ペンの道具を選ぶと入力モードになります。パソコンのキーボードで音を置くか、マウスでクリックして置きます。</li>
+  <li>スペースキーで再生します（入力モードのときは、アローの道具に切り替えると再生モードになります）。</li>
+</ol>
+<p>音源をつながなくても、macOS 内蔵の音源で鳴ります。</p>
+
+<h2>操作の一覧はアプリの中にあります</h2>
+<p>キーの割り当ては、打ち込みの画面にある「キー割り当て」ボタンで確認できます。アプリの更新で変わることがあるため、このページには載せていません。</p>
+
+<h2>よくある質問</h2>
+<dl>
+  <dt>Q. 音が鳴りません</dt>
+  <dd>画面下の「MIDI 出力先」を確かめてください。「内蔵音源（GM）」を選ぶと、外部の機材がなくても鳴ります。外部の音源を選んでいるときは、機材の電源・接続・音量も確かめてください。トラックの「M」（ミュート）が点いていないか、ほかのトラックの「S」（ソロ）が点いていないかも確認してください。</dd>
+
+  <dt>Q. 鍵盤（MIDI キーボード）は必要ですか</dt>
+  <dd>要りません。パソコンのキーボードとマウスだけで打ち込めます。MIDI キーボードをつないだ場合は、演奏を録音することもできます。</dd>
+
+  <dt>Q. 作った曲を他のソフトで開けますか</dt>
+  <dd>「ファイル」メニューから標準MIDIファイル（.mid）として保存できます。楽譜作成ソフトへ渡すときは MusicXML、印刷や共有には PDF、音として渡すときは WAV / M4A に書き出せます。</dd>
+
+  <dt>Q. 譜面はどこまで書けますか</dt>
+  <dd>連桁・付点・連符・タイ・2声・臨時記号（ダブルシャープ／ダブルフラットを含む）を自動で組みます。強弱記号、クレッシェンド、スラー、アクセント、弱起、途中の転調や拍子・音部記号の変更にも対応しています。総譜とパート譜を PDF に書き出せます。</dd>
+
+  <dt>Q. 外部の MIDI 音源のパラメーターを変えられますか</dt>
+  <dd>音源エディター（⌘5）で、音色・音量・パン・フィルター・エンベロープ・リバーブなどを調整できます。XG に対応した音源では、その設定を曲に書き込んで保存できます。macOS 内蔵の音源では、一部のパラメーターは効きません。</dd>
+
+  <dt>Q. 保存していない変更はどうなりますか</dt>
+  <dd>同じファイルを開き直そうとしたときは、確認してから読み込みます。⌘Z で元に戻せます。</dd>
+
+  <dt>Q. ファイルはどこまで読み書きしますか</dt>
+  <dd>「開く」「保存」で選んだファイルと、Finder でダブルクリックして開いたファイルだけです。それ以外の場所には触れません。外部との通信も行いません。</dd>
+</dl>
+
+<h2>動作環境</h2>
+<ul>
+  <li>macOS 13（Ventura）以降</li>
+  <li>MIDI 音源は任意（無くても内蔵音源で鳴ります）</li>
+</ul>
+
+<h2>お問い合わせ</h2>
+<p>ご質問・ご要望・不具合のご連絡は <a href="mailto:emc.hs07@gmail.com">emc.hs07@gmail.com</a> までお願いします。</p>
+
+<footer>
+  <p><a href="privacy.html">プライバシーポリシー</a></p>
+  <p>© 2026 Hideki Sato</p>
+</footer>
+</body>
+</html>
