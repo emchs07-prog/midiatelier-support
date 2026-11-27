@@ -10,17 +10,123 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "MIDIアトリエ", "operatingSystem": "macOS", "applicationCategory": "UtilitiesApplication", "description": "鍵盤がなくても、パソコンのキーボードで曲を打ち込めます。ピアノロール・譜面・ドラムに対応。", "url": "https://emchs07-prog.github.io/midiatelier-support/", "author": {"@type": "Person", "name": "Hideki Sato", "url": "https://emchs07-prog.github.io/"}, "downloadUrl": "https://apps.apple.com/jp/app/id6806438048"}</script>
 <!-- 検索向けの設定（ここまで） -->
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
-    max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.8;
+  :root {
+    color-scheme: light dark;
+    --bg:#ffffff; --bg2:#f5f7fb; --card:#ffffff; --text:#14171f; --mute:#5b6475; --line:#e3e7ef;
+    --accent:#b7791f; --accent2:#c0563b; --code:#0b0d12; --codetext:#e8ecf3; --shadow:0 10px 30px rgba(20,30,60,.08);
   }
-  h1 { border-bottom: 3px solid #5AD1E8; padding-bottom: .4rem; }
-  h2 { margin-top: 2.5rem; color: #2E9FB8; }
-  footer { margin-top: 4rem; font-size: .85rem; opacity: .7; }
-  a { color: #2E9FB8; }
-  dt { font-weight: bold; margin-top: 1rem; }
-  code { font-family: Menlo, monospace; font-size: .9em; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0b0d12; --bg2:#11151d; --card:#151a23; --text:#e9edf5; --mute:#9aa4b6; --line:#232a36;
+            --accent:#f0b24a; --accent2:#f08a6b; --shadow:0 10px 30px rgba(0,0,0,.35); }
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; scroll-padding-top:72px; }
+  body { margin:0; background:var(--bg); color:var(--text); line-height:1.8;
+         font-family:-apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+         -webkit-font-smoothing:antialiased; }
+  a { color:var(--accent); }
+  img { max-width:100%; height:auto; }
+  .wrap { max-width:1040px; margin:0 auto; padding:0 24px; }
+  /* 上の帯 */
+  .top { position:sticky; top:0; z-index:10; backdrop-filter:saturate(180%) blur(14px); -webkit-backdrop-filter:saturate(180%) blur(14px);
+         background:color-mix(in srgb, var(--bg) 82%, transparent); border-bottom:1px solid var(--line); }
+  .top .wrap { display:flex; align-items:center; gap:16px; height:56px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:700; text-decoration:none; color:var(--text); white-space:nowrap; }
+  .brand img { width:28px; height:28px; border-radius:7px; }
+  .top nav { margin-left:auto; display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
+  .top nav a { color:var(--mute); text-decoration:none; font-size:.88rem; padding:6px 10px; border-radius:8px; white-space:nowrap; }
+  .top nav a:hover { color:var(--text); background:var(--bg2); }
+  /* 先頭 */
+  .hero { position:relative; overflow:hidden; text-align:center; padding:72px 0 40px; }
+  .hero::before { content:""; position:absolute; inset:-30% -10% auto; height:120%; z-index:-1; filter:blur(20px);
+    background:radial-gradient(40% 45% at 30% 35%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+               radial-gradient(35% 40% at 72% 30%, color-mix(in srgb, var(--accent2) 18%, transparent), transparent 70%); }
+  .hero .icon { width:112px; height:112px; border-radius:25px; box-shadow:var(--shadow); }
+  .hero h1 { font-size:clamp(2.4rem, 6vw, 3.6rem); line-height:1.15; margin:20px 0 4px; letter-spacing:-.01em; font-weight:800; }
+  .hero .yomi { color:var(--mute); font-size:.9rem; margin:0; }
+  .hero .sub { font-size:clamp(1.15rem, 2.6vw, 1.5rem); font-weight:700; margin:14px 0 10px;
+    background:linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero .lead { max-width:36em; margin:0 auto; color:var(--mute); }
+  .chips { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:20px 0 0; padding:0; list-style:none; }
+  .chips li { font-size:.82rem; font-weight:600; color:var(--mute); border:1px solid var(--line); background:var(--card); border-radius:999px; padding:3px 12px; }
+  .btns { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin:28px 0 0; }
+  .btn { display:inline-flex; align-items:center; gap:8px; font-weight:700; text-decoration:none; border-radius:12px; padding:12px 22px; }
+  .btn.primary { background:var(--text); color:var(--bg); }
+  .btn.ghost { border:1px solid var(--line); color:var(--text); background:var(--card); }
+  .btn:hover { opacity:.88; }
+  .shot-hero { margin:48px auto 0; max-width:960px; }
+  .shot-hero img, .gallery img { display:block; width:100%; border-radius:12px; border:1px solid var(--line); box-shadow:var(--shadow); }
+  .note { max-width:44em; margin:28px auto 0; font-size:.88rem; color:var(--mute); text-align:center; }
+  /* 節 */
+  section.block { padding:64px 0; }
+  section.block.alt { background:var(--bg2); }
+  .eyebrow { display:block; text-align:center; font-size:.78rem; font-weight:700; letter-spacing:.12em; color:var(--accent); margin:0 0 6px; }
+  h2 { text-align:center; font-size:clamp(1.5rem, 3.4vw, 2rem); line-height:1.35; margin:0 0 12px; }
+  .intro { text-align:center; color:var(--mute); max-width:38em; margin:0 auto 36px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 22px 18px; }
+  .card .ic { display:inline-grid; place-items:center; width:40px; height:40px; border-radius:11px; font-size:1.2rem;
+              background:color-mix(in srgb, var(--accent) 14%, transparent); }
+  .card h3 { font-size:1.06rem; margin:12px 0 6px; line-height:1.5; }
+  .card p { margin:0; color:var(--mute); font-size:.94rem; }
+  .card .tag { display:inline-block; font-size:.72rem; font-weight:700; color:var(--accent2); margin-left:6px; vertical-align:2px; }
+  .codes { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:28px 0 0; padding:0; list-style:none; }
+  .codes li { font-family:Menlo, ui-monospace, monospace; font-size:.85rem; background:var(--code); color:var(--codetext); border-radius:8px; padding:4px 12px; }
+  /* 画面 */
+  .gallery { display:grid; grid-auto-flow:column; grid-auto-columns:min(82%, 720px); gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 4px 16px; }
+  .gallery figure { margin:0; scroll-snap-align:center; }
+  .gallery.phone { grid-auto-columns:min(56%, 240px); }
+  .gallery figcaption { font-size:.88rem; color:var(--mute); margin-top:10px; text-align:center; }
+  .gallery-label { font-weight:700; margin:32px 0 12px; }
+  /* 使い方 */
+  .how { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; }
+  .how .card h3 { margin-top:0; font-size:1.15rem; }
+  .how ol { margin:0; padding-left:1.3em; }
+  .how li { margin:0 0 8px; }
+  kbd { font-family:-apple-system, sans-serif; font-size:.82em; border:1px solid var(--line); border-bottom-width:2px; border-radius:6px; padding:0 6px; background:var(--bg2); }
+  .md-list { max-width:760px; margin:0 auto; padding-left:1.3em; }
+  .md-list li { margin:0 0 10px; }
+  .for { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px; max-width:860px; margin:0 auto; padding:0; list-style:none; }
+  .for li { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; font-weight:600; }
+  .for li::before { content:"✓"; color:var(--accent); margin-right:8px; }
+  /* よくある質問 */
+  .faq { max-width:780px; margin:0 auto; }
+  .faq details { background:var(--card); border:1px solid var(--line); border-radius:14px; margin:0 0 10px; }
+  .faq summary { cursor:pointer; list-style:none; padding:16px 48px 16px 20px; font-weight:700; position:relative; }
+  .faq summary::-webkit-details-marker { display:none; }
+  .faq summary::after { content:"+"; position:absolute; right:20px; top:50%; transform:translateY(-50%); font-size:1.3rem; color:var(--mute); }
+  .faq details[open] summary::after { content:"−"; }
+  .faq .a { padding:0 20px 16px; color:var(--mute); }
+  .faq .a p { margin:0 0 8px; }
+  /* お問い合わせ */
+  .contact { max-width:640px; margin:0 auto; text-align:center; }
+  .contact .card { padding:28px; }
+  .contact p { margin:0 0 10px; }
+  .other-apps { max-width:780px; margin:0 auto !important; padding:56px 24px 0; }
+  .other-apps h2 { margin-bottom:4px; }
+  .other-apps > p { text-align:center; }
+  .other-apps ul { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:4px 20px; }
+  .other-apps li { line-height:1.5; }
+  footer { text-align:center; color:var(--mute); font-size:.85rem; padding:40px 24px 56px; margin-top:56px; border-top:1px solid var(--line); }
+  @media (max-width:640px) { .top nav { display:none; } .hero { padding-top:48px; } section.block { padding:48px 0; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+  .en { padding-top:24px; }
+  .en-sep { border:0; border-top:1px solid var(--line); margin:64px 0 0; }
+  .en .how { grid-template-columns:1fr; max-width:780px; margin:0 auto; }
+  .keys { display:grid; grid-template-columns:repeat(auto-fill, minmax(420px, 1fr)); gap:16px; align-items:start; }
+  .keys h3 { margin:0 0 10px; font-size:1.05rem; }
+  .keys table { width:100%; border-collapse:collapse; font-size:.92rem; }
+  .keys th { text-align:left; white-space:nowrap; padding:6px 14px 6px 0; vertical-align:top; font-weight:400; }
+  .keys td { padding:6px 0; color:var(--mute); border-bottom:1px solid var(--line); }
+  .keys tr:last-child td { border-bottom:0; }
+  .keys-note { text-align:center; color:var(--mute); font-size:.9rem; margin:20px auto 0; max-width:44em; }
+  @media (max-width:640px) { .keys { grid-template-columns:1fr; } }
+  .notecard { display:block; text-align:left; text-decoration:none; color:var(--text); transition:transform .15s ease; }
+  .notecard:hover { transform:translateY(-2px); }
+  .nc-site { display:inline-block; font-size:.75rem; font-weight:700; color:var(--bg); background:var(--text); border-radius:6px; padding:1px 8px; }
+  .nc-title { display:block; font-weight:700; font-size:1.1rem; line-height:1.5; margin:10px 0 6px; }
+  .nc-lead { display:block; color:var(--mute); font-size:.92rem; }
+  .nc-go { display:block; color:var(--accent); font-weight:700; margin-top:10px; }
 </style>
 <!-- リンクを貼ったときに出る紹介カード（OGP） -->
 <meta property="og:type" content="website">
@@ -33,55 +139,101 @@
 <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-<h1>MIDIアトリエ</h1>
-<p class="og-card"><img src="og.png" alt="MIDIアトリエの紹介" width="1200" height="630" style="display:block;width:100%;max-width:720px;height:auto;border-radius:12px;margin:12px 0 24px;"></p>
-<p>2026年11月に、アプリの名前を「MidiAtelier」から「MIDIアトリエ」に変えました。読み方は同じ「ミディアトリエ」で、機能と使い方は変わりません。</p>
-<p>MIDIアトリエ（ミディアトリエ）は、パソコンのキーボードだけで曲を打ち込める macOS 用の MIDI シーケンサーです。ピアノロール・譜面・ドラムのます目の3つの画面で編集でき、標準MIDIファイルの読み書き、音（WAV / M4A）・譜面（PDF）・MusicXML への書き出し、外部 MIDI 音源への出力に対応しています。</p>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#"><img src="img/icon.png" alt="" width="28" height="28">MIDIアトリエ</a>
+  <nav aria-label="ページ内の移動"><a href="#features">特長</a><a href="#screens">画面</a><a href="#start">はじめかた</a><a href="#faq">よくある質問</a><a href="#contact">お問い合わせ</a></nav>
+</div></header>
 
-<h2>はじめかた</h2>
-<ol>
+<main>
+<section class="hero"><div class="wrap">
+  <img class="icon" src="img/icon.png" alt="MIDIアトリエのアイコン" width="112" height="112">
+  <h1>MIDIアトリエ</h1>
+  <p class="yomi">ミディアトリエ</p>
+  <p class="sub">打ち込んで、清書まで。</p>
+  <p class="lead">パソコンのキーボードだけで曲を打ち込める、Mac 用の MIDI シーケンサーです。鍵盤がなくても、譜面が書けなくても始められます。音の長さを選んで、キーを押して、位置を決める。その繰り返しで曲ができていきます。</p>
+  <ul class="chips"><li>Mac</li><li>macOS 13 以降</li><li>鍵盤なしで打ち込める</li><li>通信なし・データの収集なし</li></ul>
+  <div class="btns">
+    <a class="btn primary" href="https://apps.apple.com/jp/app/id6806438048">App Store で見る</a>
+    <a class="btn ghost" href="#start">はじめかた</a>
+  </div>
+  <figure class="shot-hero" style="margin-left:auto;margin-right:auto;"><img src="img/mac-03.jpg" alt="MIDIアトリエの譜面の画面。打ち込んだ曲が五線に清書されている" width="1600" height="1000"></figure>
+  <p class="note">2026年11月に、アプリの名前を「MidiAtelier」から「MIDIアトリエ」に変えました。読み方は同じ「ミディアトリエ」で、機能と使い方は変わりません。</p>
+</div></section>
+
+<section class="block alt" id="features"><div class="wrap">
+  <span class="eyebrow">FEATURES</span>
+  <h2>3つの画面、同じ操作で</h2>
+  <p class="intro">ピアノロール・譜面・ドラムのます目。どの画面も同じキー割り当てで打ち込めるので、覚え直しは要りません。</p>
+  <div class="grid">
+    <div class="card"><span class="ic" aria-hidden="true">🎹</span><h3>鍵盤がなくても打ち込める</h3><p>パソコンのキーボードとマウスだけで音を置けます。MIDI キーボードをつなげば、演奏を録音することもできます。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">🎼</span><h3>3つの画面で編集</h3><p>ピアノロール（⌘2）、ドラムのます目（⌘3）、譜面（⌘4）。同じ曲を、そのときやりたい方法で。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">🖨️</span><h3>譜面がそのまま清書に</h3><p>連桁・付点・連符・タイ・2声・臨時記号を自動で組み、強弱記号やスラーも置けます。総譜とパート譜を PDF に。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">🎚️</span><h3>記号は記号のまま持つ</h3><p>クレッシェンドやアクセントは記号として保存。記号を動かせば鳴り方もついてきます。ほかのソフトへ渡すときだけ実データに展開。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">🥁</span><h3>ノリ（スウィング・シャッフル）</h3><p>音符の位置を書き換えずに、裏拍だけを後ろへずらして演奏。はね具合は数値で調整でき、やめれば元に戻ります。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">🔌</span><h3>音源につなぐ</h3><p>外部の MIDI 音源へ出力。XG に対応した音源なら、音色・フィルター・リバーブなどを画面のつまみで調整して曲に書き込めます。音源がなくても内蔵の音で鳴ります。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">💾</span><h3>いろいろな形で書き出し</h3><p>標準MIDIファイル（SMF）、音（WAV / M4A）、譜面（PDF）、楽譜データ（MusicXML）。他のソフトや印刷、共有へ。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">🧰</span><h3>打ち込みを助ける道具</h3><p>グリッドへの吸着、テンポと拍子の変更、メトロノーム、数値で直せるリスト画面、コピー・貼り付け、区間ごとの編集。</p></div>
+  </div>
+</div></section>
+
+<section class="block" id="screens"><div class="wrap">
+  <span class="eyebrow">SCREENS</span>
+  <h2>画面</h2>
+  <p class="intro">横にすべらせると、ほかの画面も見られます。</p>
+  <div class="gallery">
+    <figure><img src="img/mac-01.jpg" alt="" width="1600" height="1000" loading="lazy"><figcaption>トラックの一覧</figcaption></figure>
+    <figure><img src="img/mac-02.jpg" alt="" width="1600" height="1000" loading="lazy"><figcaption>ピアノロール</figcaption></figure>
+    <figure><img src="img/mac-03.jpg" alt="" width="1600" height="1000" loading="lazy"><figcaption>譜面。そのまま清書になる</figcaption></figure>
+    <figure><img src="img/mac-04.jpg" alt="" width="1600" height="1000" loading="lazy"><figcaption>ドラムのます目</figcaption></figure>
+    <figure><img src="img/mac-05.jpg" alt="" width="1600" height="1000" loading="lazy"><figcaption>音源エディター（XG）</figcaption></figure>
+  </div>
+</div></section>
+
+<section class="block alt" id="start"><div class="wrap">
+  <span class="eyebrow">GETTING STARTED</span>
+  <h2>はじめかた</h2>
+  <p class="intro">音源をつながなくても、macOS 内蔵の音源で鳴ります。</p>
+  <div class="how">
+    <div class="card"><h3>打ち込んでみる</h3><ol>
   <li>アプリを起動すると、トラック（チャンネル）の一覧が出ます。「Ch 追加」で音を入れる先を作ります。</li>
   <li>打ち込む画面を開きます。ピアノロールは ⌘2、ドラム入力は ⌘3、譜面は ⌘4 です。</li>
   <li>ペンの道具を選ぶと入力モードになります。パソコンのキーボードで音を置くか、マウスでクリックして置きます。</li>
   <li>スペースキーで再生します（入力モードのときは、アローの道具に切り替えると再生モードになります）。</li>
-</ol>
-<p>音源をつながなくても、macOS 内蔵の音源で鳴ります。</p>
+</ol></div>
+    <div class="card"><h3>キー操作の一覧</h3><ol>
+      <li>打ち込みの画面にある「キー割り当て」ボタンで確認できます。</li>
+      <li>アプリの更新で変わることがあるため、いつも最新の内容を見られるよう、このページには載せていません。</li>
+    </ol><h3 style="margin-top:18px;">動作環境</h3><ol>
+      <li>macOS 13（Ventura）以降</li>
+      <li>MIDI 音源は任意（無くても内蔵音源で鳴ります）</li>
+    </ol></div>
+  </div>
+</div></section>
 
-<h2>操作の一覧はアプリの中にあります</h2>
-<p>キーの割り当ては、打ち込みの画面にある「キー割り当て」ボタンで確認できます。アプリの更新で変わることがあるため、このページには載せていません。</p>
+<section class="block" id="faq"><div class="wrap">
+  <span class="eyebrow">FAQ</span>
+  <h2>よくある質問</h2>
+  <div class="faq">
+    <details><summary>音が鳴りません</summary><div class="a"><p>画面下の「MIDI 出力先」を確かめてください。「内蔵音源（GM）」を選ぶと、外部の機材がなくても鳴ります。外部の音源を選んでいるときは、機材の電源・接続・音量も確かめてください。トラックの「M」（ミュート）が点いていないか、ほかのトラックの「S」（ソロ）が点いていないかも確認してください。</p></div></details>
+    <details><summary>鍵盤（MIDI キーボード）は必要ですか</summary><div class="a"><p>要りません。パソコンのキーボードとマウスだけで打ち込めます。MIDI キーボードをつないだ場合は、演奏を録音することもできます。</p></div></details>
+    <details><summary>作った曲を他のソフトで開けますか</summary><div class="a"><p>「ファイル」メニューから標準MIDIファイル（.mid）として保存できます。楽譜作成ソフトへ渡すときは MusicXML、印刷や共有には PDF、音として渡すときは WAV / M4A に書き出せます。</p></div></details>
+    <details><summary>譜面はどこまで書けますか</summary><div class="a"><p>連桁・付点・連符・タイ・2声・臨時記号（ダブルシャープ／ダブルフラットを含む）を自動で組みます。強弱記号、クレッシェンド、スラー、アクセント、弱起、途中の転調や拍子・音部記号の変更にも対応しています。総譜とパート譜を PDF に書き出せます。</p></div></details>
+    <details><summary>外部の MIDI 音源のパラメーターを変えられますか</summary><div class="a"><p>音源エディター（⌘5）で、音色・音量・パン・フィルター・エンベロープ・リバーブなどを調整できます。XG に対応した音源では、その設定を曲に書き込んで保存できます。macOS 内蔵の音源では、一部のパラメーターは効きません。</p></div></details>
+    <details><summary>保存していない変更はどうなりますか</summary><div class="a"><p>同じファイルを開き直そうとしたときは、確認してから読み込みます。⌘Z で元に戻せます。</p></div></details>
+    <details><summary>ファイルはどこまで読み書きしますか</summary><div class="a"><p>「開く」「保存」で選んだファイルと、Finder でダブルクリックして開いたファイルだけです。それ以外の場所には触れません。外部との通信も行いません。</p></div></details>
+  </div>
+</div></section>
 
-<h2>よくある質問</h2>
-<dl>
-  <dt>Q. 音が鳴りません</dt>
-  <dd>画面下の「MIDI 出力先」を確かめてください。「内蔵音源（GM）」を選ぶと、外部の機材がなくても鳴ります。外部の音源を選んでいるときは、機材の電源・接続・音量も確かめてください。トラックの「M」（ミュート）が点いていないか、ほかのトラックの「S」（ソロ）が点いていないかも確認してください。</dd>
-
-  <dt>Q. 鍵盤（MIDI キーボード）は必要ですか</dt>
-  <dd>要りません。パソコンのキーボードとマウスだけで打ち込めます。MIDI キーボードをつないだ場合は、演奏を録音することもできます。</dd>
-
-  <dt>Q. 作った曲を他のソフトで開けますか</dt>
-  <dd>「ファイル」メニューから標準MIDIファイル（.mid）として保存できます。楽譜作成ソフトへ渡すときは MusicXML、印刷や共有には PDF、音として渡すときは WAV / M4A に書き出せます。</dd>
-
-  <dt>Q. 譜面はどこまで書けますか</dt>
-  <dd>連桁・付点・連符・タイ・2声・臨時記号（ダブルシャープ／ダブルフラットを含む）を自動で組みます。強弱記号、クレッシェンド、スラー、アクセント、弱起、途中の転調や拍子・音部記号の変更にも対応しています。総譜とパート譜を PDF に書き出せます。</dd>
-
-  <dt>Q. 外部の MIDI 音源のパラメーターを変えられますか</dt>
-  <dd>音源エディター（⌘5）で、音色・音量・パン・フィルター・エンベロープ・リバーブなどを調整できます。XG に対応した音源では、その設定を曲に書き込んで保存できます。macOS 内蔵の音源では、一部のパラメーターは効きません。</dd>
-
-  <dt>Q. 保存していない変更はどうなりますか</dt>
-  <dd>同じファイルを開き直そうとしたときは、確認してから読み込みます。⌘Z で元に戻せます。</dd>
-
-  <dt>Q. ファイルはどこまで読み書きしますか</dt>
-  <dd>「開く」「保存」で選んだファイルと、Finder でダブルクリックして開いたファイルだけです。それ以外の場所には触れません。外部との通信も行いません。</dd>
-</dl>
-
-<h2>動作環境</h2>
-<ul>
-  <li>macOS 13（Ventura）以降</li>
-  <li>MIDI 音源は任意（無くても内蔵音源で鳴ります）</li>
-</ul>
-
-<h2>お問い合わせ</h2>
-<p>ご質問・ご要望・不具合のご連絡は <a href="mailto:emc.hs07@gmail.com">emc.hs07@gmail.com</a> までお願いします。</p>
+<section class="block alt" id="contact"><div class="wrap contact">
+  <span class="eyebrow">CONTACT</span>
+  <h2>お問い合わせ</h2>
+  <div class="card">
+    <p>ご質問・ご要望・不具合のご連絡は、メールでお気軽にどうぞ。</p>
+    <p><a class="btn ghost" href="mailto:emc.hs07@gmail.com">emc.hs07@gmail.com</a></p>
+    <p style="font-size:.9rem;color:var(--mute);margin:14px 0 0;">MIDIアトリエは外部と通信せず、データを集めません。くわしくは <a href="privacy.html">プライバシーポリシー</a> をご覧ください。</p>
+  </div>
+</div></section>
+</main>
 
 <!-- この作者のほかのアプリ（ここから） -->
 <section class="other-apps" style="margin-top:3rem;">
@@ -103,9 +255,6 @@
 </ul>
 </section>
 <!-- この作者のほかのアプリ（ここまで） -->
-<footer>
-  <p><a href="privacy.html">プライバシーポリシー</a></p>
-  <p>© 2026 Hideki Sato</p>
-</footer>
+<footer>© 2026 Hideki Sato — MIDIアトリエ</footer>
 </body>
 </html>
